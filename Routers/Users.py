@@ -1,4 +1,4 @@
-from CRUD.Users import get_users, create_user, delete_user, login, update_user
+from CRUD.Users import get_users, create_user, delete_user, login, update_user,check_user_email
 from Models.models import UserCreate,LoginDetails,UserUpdate
 from fastapi import APIRouter
 
@@ -15,7 +15,10 @@ async def get_users_t():
 @User_router.post("/api/users/")
 async def create_user_t(user: UserCreate):
     if x == 1:
-        return await create_user(user)
+        valid = await check_user_email(user.email)
+        if valid == "false":
+            return await create_user(user)
+        return {"message":"email in use"}
     return {'message':'Invalid token'}
 ###################################################
 @User_router.delete("/api/users/{user_id}")

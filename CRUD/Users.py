@@ -1,3 +1,5 @@
+from dns.e164 import query
+
 from Utils.db import db
 from Models.models import UserCreate,LoginDetails,UserUpdate
 
@@ -50,3 +52,12 @@ async def update_user(user_update:UserUpdate):
         await db.fetch(query, {user_update.newValue}, user_update.id)
         return{"message":"Updated successfully"}
     return{"message":"Updated Unsuccessfully"}
+#################################################################################
+async def check_user_email(user_email:str):
+    query = "SELECT * FROM users_main WHERE email = $1;"
+    valid_user = await db.fetch(query, {user_email})
+    if valid_user:
+        return "true"
+    return "false"
+
+################################################################################
